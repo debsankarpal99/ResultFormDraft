@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Custom styles for our app */
+.upload-container {
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-container:hover {
+  border-color: #0070f3;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.result-table th,
+.result-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.result-table th {
+  background-color: #f2f2f2;
+}
+
+/* Modern tech analyzing animation */
+.tech-analyzing-container {
+  position: relative;
+  width: 380px;
+  height: 240px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
+  animation: fade-in 0.15s ease-out;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.analyzing-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  animation: overlay-fade-in 0.15s ease-out forwards;
+  will-change: opacity;
+}
+
+.vertical-bars-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 120px;
+  gap: 16px;
+  margin-bottom: 24px;
+  transform: translateZ(0);
+}
+
+.vertical-bar {
+  width: 30px;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #0a3a8f, #2563eb);
+  box-shadow: 0 0 10px rgba(10, 58, 143, 0.2);
+  will-change: height;
+  transform: translateZ(0);
+}
+
+.vertical-bar-1 {
+  height: 60px;
+  animation: bar1-animation 1s infinite alternate;
+}
+
+.vertical-bar-2 {
+  height: 90px;
+  animation: bar2-animation 1.2s infinite alternate;
+  animation-delay: 0.1s;
+}
+
+.vertical-bar-3 {
+  height: 40px;
+  animation: bar3-animation 0.8s infinite alternate;
+  animation-delay: 0.2s;
+}
+
+.tech-analyzing-text {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0a3a8f;
+  letter-spacing: 1px;
+  z-index: 10;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  text-align: center;
+}
+
+.tech-analyzing-dots {
+  display: inline-block;
+  width: 30px;
+  animation: dots 0.8s infinite;
+}
+
+.tech-info-text {
+  font-family: monospace;
+  font-size: 14px;
+  color: #0a3a8f;
+  margin-top: 12px;
+  opacity: 0.7;
+  text-align: center;
+}
+
+/* Background glow effect */
+.glow-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+}
+
+@keyframes overlay-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) translateZ(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: '.';
+  }
+  40% {
+    content: '..';
+  }
+  60%, 100% {
+    content: '...';
+  }
+}
+
+@keyframes bar1-animation {
+  0%, 5% {
+    height: 60px;
+  }
+  50% {
+    height: 70px;
+  }
+  95%, 100% {
+    height: 90px;
+  }
+}
+
+@keyframes bar2-animation {
+  0%, 5% {
+    height: 90px;
+  }
+  50% {
+    height: 40px;
+  }
+  95%, 100% {
+    height: 100px;
+  }
+}
+
+@keyframes bar3-animation {
+  0%, 5% {
+    height: 40px;
+  }
+  50% {
+    height: 85px;
+  }
+  95%, 100% {
+    height: 50px;
+  }
+}
