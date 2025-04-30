@@ -13,7 +13,7 @@ const BASE_WIDTH = 5100;
 const BASE_HEIGHT = 3300;
 const TOLERANCE_PERCENT = 5; // 5% tolerance
 
-// Acceptable scale factors (1 = original size, 0.5 = half size, etc.)
+// Acceptable scale factors
 const ACCEPTABLE_SCALE_FACTORS = [0.25, 0.5, 1, 1.5, 2];
 
 const FileUpload = ({ onFileProcessed, isProcessing }) => {
@@ -44,7 +44,7 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
       
       {/* Status text */}
       <div className="tech-info-text">
-        Extracting score data...
+        Just a sec... Pulling out the numbers! 🔍
       </div>
     </div>
   );
@@ -251,10 +251,9 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
     <div className="mb-8">
       {/* Warning note with explicit Tailwind text-red-600 class */}
       <div className="mb-4 p-4 border-2 border-red-600 bg-red-50 rounded-md">
-        <h4 className="text-red-600 font-bold mb-1">Important File Preparation Note:</h4>
+        
         <p className="text-red-600">
-          It is recommended to either upload the original PDF containing the result or convert your PDF to images (JPG/JPEG/PNG) and upload. 
-          Avoid taking screenshots as they will not match the required image dimensions.
+          Please upload the original PDF containing the result.
         </p>
       </div>
       
@@ -267,14 +266,10 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
           isDragActive ?
             <p className="text-lg">Drop the file here...</p> :
             <div>
-              <p className="text-lg mb-2">Drag & drop an exam score chart image or PDF file here, or click to select</p>
-              <p className="text-sm text-gray-500">Supported formats: JPEG, PNG, PDF</p>
-              <p className="text-sm font-medium text-blue-600 mt-2">
-                Important: Images must be one of these approximate dimensions: {getAcceptableDimensionsText()} pixels
-              </p>
-              <p className="text-sm text-gray-500 mt-1">
-                For multi-page PDFs, the second page will be automatically selected
-              </p>
+              <p className="text-lg mb-2">Drag & drop your result PDF file here, or click to select</p>
+              <p className="text-sm text-gray-500">Supported formats: PDF</p>
+             
+              
             </div>
         }
       </div>
@@ -282,7 +277,7 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
       {dimensionError && (
         <div className="mt-2 text-red-600">
           <p>{dimensionError}</p>
-          <p className="text-sm mt-1">Please upload a full PDF or image with dimensions matching one of the acceptable sizes.</p>
+          <p className="text-sm mt-1">Please upload original PDF file.</p>
         </div>
       )}
       

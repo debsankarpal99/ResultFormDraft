@@ -75,11 +75,11 @@ const ResultMessage = ({ result }) => {
                 <div style={titleStyle}>Congratulations !!</div>
                 <div style={paragraphStyle}>Very happy to hear about your results.</div>
                 <div style={paragraphStyle}>Keep working hard and strive for greater success.<br />
-                  <a href="https://www.cfainstitute.org/-/media/documents/factsheet/cbt-candidate-pathing-infographic.pdf" target="_blank" rel="noopener noreferrer" style={linkStyle}>cbt-candidate-path</a>
+                  <a href="https://www.cfainstitute.org/programs/cfa-program/candidate-resources/exam-day-preparation-guide" target="_blank" rel="noopener noreferrer" style={linkStyle}>cbt-candidate-path</a>
                 </div>
                 <div style={paragraphStyle}>
                   Watch the 1st lecture on YouTube. The syllabus is lengthy.<br />
-                  <a href="https://www.youtube.com/channel/UCyT8ihmITSzS0U9kW1xc8qg/playlists" target="_blank" rel="noopener noreferrer" style={linkStyle}>YouTube Channel</a>
+                  <a href="https://www.youtube.com/channel/UCyt8himITSzS0U9ktWIxc8g/playlists" target="_blank" rel="noopener noreferrer" style={linkStyle}>YouTube</a>
                 </div>
                 <div style={signatureStyle}>- Aswini Bajaj</div>
               </>
@@ -88,7 +88,7 @@ const ResultMessage = ({ result }) => {
               <>
                 <div style={failedTitleStyle}>Let's work hard again !!</div>
                 <div style={paragraphStyle}>Please listen to the mentor note:<br />
-                  <a href="https://www.dropbox.com/s/imdwi4dl42612op/Did%20Not%20Clear.mp3?dl=0" target="_blank" rel="noopener noreferrer" style={linkStyle}>Dropbox Mentor Note</a>
+                  <a href="" target="_blank" rel="noopener noreferrer" style={linkStyle}>Mentor Note</a>
                 </div>
                 <div style={paragraphStyle}>After that, fill out the analysis form. The output of the form shall be mailed to you.<br />
                   <a href="https://study.aswinibajaj.com/Introspect/" target="_blank" rel="noopener noreferrer" style={linkStyle}>Analysis Form</a>
@@ -98,7 +98,7 @@ const ResultMessage = ({ result }) => {
                 <div style={paragraphStyle}>Please make sure that you attach a screenshot of your result so that we can renew your lectures.</div>
                 <div style={paragraphStyle}>We will also shift you from the old WhatsApp group to the new group. Please give us 5-7 working days.</div>
                 <div style={paragraphStyle}>Meanwhile, start with the YouTube lectures:<br />
-                  <a href="https://www.youtube.com/channel/UCyT8ihmITSzS0U9kW1xc8qg/playlists" target="_blank" rel="noopener noreferrer" style={linkStyle}>YouTube Channel</a>
+                  <a href="https://www.youtube.com/channel/UCyt8himITSzS0U9ktWIxc8g/playlists" target="_blank" rel="noopener noreferrer" style={linkStyle}>YouTube Channel</a>
                 </div>
                 <div style={signatureStyle}>- Aswini Bajaj</div>
               </>
