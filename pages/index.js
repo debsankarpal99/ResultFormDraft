@@ -96,31 +96,36 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-light">
       <Head>
         <title>Exam Score Analyzer | Aswini Bajaj Classes</title>
         <meta name="description" content="Analyze exam score charts from PDFs and images" />
         <link rel="icon" href="/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code&display=swap" rel="stylesheet" />
       </Head>
 
       <div className="container mx-auto px-4 py-8 max-w-5xl">
-        <header className="mb-8 pb-6 border-b border-gray-200">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Analyzer Dashboard</h1>
-          <p className="text-lg text-gray-600">Analyze your exam results with advanced score processing</p>
+        <header className="app-header mb-8 pb-6 border-b border-gray-200">
+          <div className="relative z-10">
+            <h1 className="app-title">Analyzer Dashboard</h1>
+            <p className="app-subtitle">Analyze your exam results with advanced score processing</p>
+          </div>
+          
+          {/* Decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+          <div className="absolute top-10 right-32 w-64 h-64 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         </header>
 
-        <main className="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <main className="main-card p-8 mb-8">
           {!analysisComplete && (
-            <div className="mb-10 max-w-md mx-auto">
-              <label className="block text-xl font-semibold text-gray-700 mb-3">
+            <div className="course-selector-container mb-20">
+              <label className="block text-xl font-semibold text-gray-700 mb-4">
                 Select Course
               </label>
               
-              <div className="relative">
+              <div className="relative mb-8">
                 <select
-                  className="block w-full text-xl px-5 py-3 border border-gray-300 bg-white rounded-lg 
-                  shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-                  appearance-none cursor-pointer"
+                  className="modern-select"
                   value={selectedCourse}
                   onChange={e => setSelectedCourse(e.target.value)}
                 >
@@ -139,7 +144,7 @@ export default function Home() {
               </div>
               
               {selectedCourse === 'CFA - Level 1' && (
-                <div className="mt-8 border-t border-gray-200 pt-6">
+                <div className="mt-16 border-t border-gray-200 pt-8">
                   <FileUpload 
                     onFileProcessed={handleFileProcessed}
                     isProcessing={isProcessing}
@@ -150,8 +155,8 @@ export default function Home() {
           )}
 
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
-              <div className="flex">
+            <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 shadow-md">
+              <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -167,12 +172,20 @@ export default function Home() {
           {analysisComplete && (
             <div className="analysis-results">
               {summary && <ResultSummary summary={summary} />}
-              {scores && <ScoreChart scores={scores} />}
-              {scores && <ResultTable scores={scores} />}
+              
+              <div className="glass-card mt-8">
+                {scores && <ScoreChart scores={scores} />}
+              </div>
+              
+              <div className="glass-card mt-8">
+                {scores && <ResultTable scores={scores} />}
+              </div>
+              
               {summary && <ResultMessage result={summary.result} />}
-              <div className="mt-10 flex justify-center">
+              
+              <div className="mt-12 flex justify-center">
                 <button
-                  className="px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md"
+                  className="btn-primary"
                   onClick={handleAnalyzeAgain}
                 >
                   Analyze Another Result
@@ -182,7 +195,7 @@ export default function Home() {
           )}
         </main>
 
-        <footer className="py-6 text-center text-gray-600 border-t border-gray-200">
+        <footer className="footer">
           <p>Aswini Bajaj Classes &copy; {new Date().getFullYear()}</p>
         </footer>
       </div>

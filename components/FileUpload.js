@@ -248,43 +248,55 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
   });
 
   return (
-    <div className="mb-8">
-      {/* Warning note with explicit Tailwind text-red-600 class */}
-      <div className="mb-4 p-4 border-2 border-red-600 bg-red-50 rounded-md">
-        
-        <p className="text-red-600">
-          Please upload the original PDF containing the result.
-        </p>
-      </div>
-      
+    <div className="file-upload">
       <div
         {...getRootProps()}
-        className={`upload-container border-2 p-6 rounded-lg text-center ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 border-dashed'}`}
+        className={`upload-container glass-card ${
+          isDragActive ? "border-primary ring-2 ring-blue-200" : ""
+        }`}
       >
         <input {...getInputProps()} />
-        {
-          isDragActive ?
-            <p className="text-lg">Drop the file here...</p> :
-            <div>
-              <p className="text-lg mb-2">Drag & drop your result PDF file here, or click to select</p>
-              <p className="text-sm text-gray-500">Supported formats: PDF</p>
-             
-              
-            </div>
-        }
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="text-2xl mb-3">
+            📄
+          </div>
+          
+          {isDragActive ? (
+            <p className="text-xl font-medium text-blue-600">Drop the file here ...</p>
+          ) : (
+            <>
+              <p className="text-lg font-medium text-gray-700 mb-2">
+                Drag & Drop your exam result PDF or image here
+              </p>
+              <p className="text-sm text-gray-500 mb-4">
+                or click to select a file (PDF or JPG/PNG)
+              </p>
+              <button className="btn-primary mt-2">
+                Select File
+              </button>
+            </>
+          )}
+        </div>
       </div>
       
-      {dimensionError && (
-        <div className="mt-2 text-red-600">
-          <p>{dimensionError}</p>
-          <p className="text-sm mt-1">Please upload original PDF file.</p>
+      {fileName && !dimensionError && (
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg shadow-sm">
+          <div className="flex items-center">
+            <span className="mr-2">📋</span>
+            <span className="text-blue-700 font-medium">{fileName}</span>
+          </div>
+          
+          {uploadProgress > 0 && (
+            <div className="mt-3">
+              <ProgressBar progress={uploadProgress} />
+            </div>
+          )}
         </div>
       )}
       
-      {fileName && !dimensionError && (
-        <div className="mt-4">
-          <p className="text-sm font-medium">Processing: {fileName}</p>
-          <ProgressBar progress={uploadProgress} />
+      {dimensionError && (
+        <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+          <p className="text-red-700">{dimensionError}</p>
         </div>
       )}
       
@@ -294,8 +306,11 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
         </div>
       )}
       
-      {/* Show summary if available */}
-      <ResultSummary summary={summary} />
+      {summary && !isProcessing && !dimensionError && (
+        <div className="mt-6 glass-card">
+          <ResultSummary summary={summary} />
+        </div>
+      )}
     </div>
   );
 };

@@ -18,31 +18,47 @@ const ResultTable = ({ scores }) => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-bold mb-4">Analysis Results</h2>
+      <h2 className="text-xl font-bold mb-6 text-gray-800 flex items-center">
+        <span className="mr-2">📊</span>
+        Analysis Results
+      </h2>
       
-      <table className="result-table">
-        <thead>
-          <tr>
-            <th>Topic</th>
-            <th>Score (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Object.entries(scores).map(([topic, score], index) => (
-            <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-              <td>{topic}</td>
-              <td>{score !== null ? `${score.toFixed(1)}%` : 'Not detected'}</td>
+      <div className="overflow-hidden rounded-lg shadow">
+        <table className="result-table">
+          <thead>
+            <tr>
+              <th className="py-3 px-4">Topic</th>
+              <th className="py-3 px-4 text-right">Score (%)</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {Object.entries(scores).map(([topic, score], index) => (
+              <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
+                <td className="py-3 px-4 font-medium">{topic}</td>
+                <td className="py-3 px-4 text-right">
+                  {score !== null ? (
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${score >= 70 ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
+                      {score.toFixed(1)}%
+                    </span>
+                  ) : (
+                    <span className="text-gray-500">Not detected</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       
-      <button
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-        onClick={handleDownloadCSV}
-      >
-        Download as CSV
-      </button>
+      <div className="mt-6 flex justify-end">
+        <button
+          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md"
+          onClick={handleDownloadCSV}
+        >
+          <span className="mr-2">📥</span>
+          Download as CSV
+        </button>
+      </div>
     </div>
   );
 };

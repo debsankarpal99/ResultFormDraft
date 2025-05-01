@@ -2,11 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --primary-light: #3b82f6;
+  --secondary: #10b981;
+  --accent: #8b5cf6;
+  --background: #f8fafc;
+  --card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   padding: 0;
   margin: 0;
+  background-color: var(--background);
+  color: var(--text-primary);
+  min-height: 100vh;
 }
 
 .container {
@@ -15,35 +34,152 @@ body {
   padding: 2rem;
 }
 
-/* Custom styles for our app */
-.upload-container {
-  border: 2px dashed #ccc;
-  border-radius: 5px;
+/* Glass morphism card effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   padding: 2rem;
-  text-align: center;
-  cursor: pointer;
+  box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
 }
 
-.upload-container:hover {
-  border-color: #0070f3;
+.glass-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
 }
 
+/* Modern gradient backgrounds */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: white;
+}
+
+.bg-gradient-light {
+  background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 100%);
+}
+
+/* Custom styles for our app */
+.upload-container {
+  border: 2px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.upload-container:hover {
+  border-color: var(--primary);
+  background-color: rgba(219, 234, 254, 0.3);
+  transform: scale(1.01);
+}
+
+/* Modern select component */
+.modern-select {
+  appearance: none;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+}
+
+.modern-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.modern-select option:disabled {
+  color: var(--text-secondary);
+}
+
+/* Modern buttons */
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s;
+}
+
+.btn-primary:hover::after {
+  transform: scaleX(1);
+}
+
+/* Result tables */
 .result-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   margin-top: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
 }
 
 .result-table th,
 .result-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  border: none;
+  padding: 1rem;
   text-align: left;
 }
 
 .result-table th {
-  background-color: #f2f2f2;
+  background-color: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+.result-table tr:nth-child(even) {
+  background-color: #f1f5f9;
+}
+
+.result-table tr:hover {
+  background-color: #e0f2fe;
 }
 
 /* Modern tech analyzing animation */
@@ -52,31 +188,36 @@ body {
   width: 380px;
   height: 240px;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
   overflow: hidden;
-  animation: fade-in 0.15s ease-out;
+  animation: fade-in 0.3s ease-out;
   will-change: transform, opacity;
   transform: translateZ(0);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .analyzing-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 50;
   opacity: 0;
-  animation: overlay-fade-in 0.15s ease-out forwards;
+  animation: overlay-fade-in 0.25s ease-out forwards;
   will-change: opacity;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
 }
 
 .vertical-bars-container {
@@ -91,9 +232,9 @@ body {
 
 .vertical-bar {
   width: 30px;
-  border-radius: 6px;
-  background: linear-gradient(to bottom, #0a3a8f, #2563eb);
-  box-shadow: 0 0 10px rgba(10, 58, 143, 0.2);
+  border-radius: 8px;
+  background: linear-gradient(to bottom, var(--primary-dark), var(--primary-light));
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.3);
   will-change: height;
   transform: translateZ(0);
 }
@@ -118,10 +259,10 @@ body {
 .tech-analyzing-text {
   font-size: 28px;
   font-weight: 700;
-  color: #0a3a8f;
+  color: var(--primary-dark);
   letter-spacing: 1px;
   z-index: 10;
-  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   text-align: center;
 }
 
@@ -132,11 +273,11 @@ body {
 }
 
 .tech-info-text {
-  font-family: monospace;
+  font-family: 'Fira Code', monospace;
   font-size: 14px;
-  color: #0a3a8f;
+  color: var(--primary-dark);
   margin-top: 12px;
-  opacity: 0.7;
+  opacity: 0.8;
   text-align: center;
 }
 
@@ -146,11 +287,12 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 120px;
-  background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  height: 150px;
+  background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
   pointer-events: none;
 }
 
+/* Animations */
 @keyframes overlay-fade-in {
   0% {
     opacity: 0;
@@ -163,7 +305,7 @@ body {
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: translateY(8px) translateZ(0);
+    transform: translateY(10px) translateZ(0);
   }
   100% {
     opacity: 1;
@@ -188,10 +330,10 @@ body {
     height: 60px;
   }
   50% {
-    height: 70px;
+    height: 80px;
   }
   95%, 100% {
-    height: 90px;
+    height: 95px;
   }
 }
 
@@ -200,10 +342,10 @@ body {
     height: 90px;
   }
   50% {
-    height: 40px;
+    height: 50px;
   }
   95%, 100% {
-    height: 100px;
+    height: 105px;
   }
 }
 
@@ -212,9 +354,88 @@ body {
     height: 40px;
   }
   50% {
-    height: 85px;
+    height: 95px;
   }
   95%, 100% {
-    height: 50px;
+    height: 60px;
   }
+}
+
+/* Added for modernizing the app */
+.app-header {
+  padding: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(219, 234, 254, 0.5) 0%, rgba(224, 242, 254, 0.8) 100%);
+  z-index: -1;
+}
+
+.app-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--primary-dark), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem;
+}
+
+.app-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+
+.main-card {
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.course-selector-container {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  animation: fade-in 0.5s ease-out;
+}
+
+.analysis-results {
+  animation: fade-in 0.5s ease-out;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding: 1.5rem 0;
+  text-align: center;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.floating-element {
+  animation: float 6s ease-in-out infinite;
 }
