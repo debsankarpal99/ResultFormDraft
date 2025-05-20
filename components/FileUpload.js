@@ -16,13 +16,16 @@ const TOLERANCE_PERCENT = 5; // 5% tolerance
 // Acceptable scale factors
 const ACCEPTABLE_SCALE_FACTORS = [0.25, 0.5, 1, 1.5, 2];
 
-const FileUpload = ({ onFileProcessed, isProcessing }) => {
+const FileUpload = ({ onFileProcessed, isProcessing , examType }) => {
+ 
   const [uploadProgress, setUploadProgress] = useState(0);
   const [fileName, setFileName] = useState('');
   const [dimensionError, setDimensionError] = useState(null);
   const [dotsPhase, setDotsPhase] = useState(0);
   const [showAnalyzing, setShowAnalyzing] = useState(false);
   const [summary, setSummary] = useState(null);
+
+  
   
   // Pre-render the analyzing dialog to prevent jitter
   const analyzingDialog = (
@@ -100,11 +103,37 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
       return `${Math.round(BASE_WIDTH * scale)}×${Math.round(BASE_HEIGHT * scale)}`;
     }).join(', ');
   };
+ const processPdfFRM = async (file) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const maxPages = pdf.numPages;
+    let fullText = '';
 
-  const processPdf = async (file) => {
+    // Extract text from all pages (or relevant pages if the structure is consistent)
+    for (let i = 1; i <= maxPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      fullText += textContent.items.map(item => item.str).join(' ') + '\n';
+    }
+
+    return fullText;
+  };
+
+  const processPdfCFA = async (file) => {
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     const pageCount = pdf.numPages;
+    const page = await pdf.getPage(1);
+    const textContent = await page.getTextContent();
+    // console.log(textContent)
+
+
+    let fullText = textContent.items.map(item => item.str).join(' ') + '\n';
+    // console.log("full text is " , fullText)
+    
+    const summary = extractCFAResults(fullText)
+    
+
     // Always try to get both pages if available
     const getPageImage = async (pageNum) => {
       const page = await pdf.getPage(pageNum);
@@ -121,25 +150,71 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
     if (pageCount >= 2) {
       page2Image = await getPageImage(2);
     }
-    return { page1Image, page2Image };
+    return { page1Image, page2Image, summary };
   };
 
   // Helper: Parse summary info from OCR text
-  const parseSummaryFromText = (text) => {
-    console.log('DEBUG - Raw OCR Text:', text);
+  // const parseSummaryFromText = (text) => {
+  //   // console.log('DEBUG - Raw OCR Text:', text);
     
-    // Updated regex to match "Did Not Pass" instead of "Failed"
-    const resultMatch = text.match(/Result[:\s]*(Passed|Did Not Pass)/i);
-    const examMatch = text.match(/Exam[:\s]*([\w\s|]+CFA Exam)/i);
-    const scoreMatch = text.match(/Your Score[:\s]*(\d+)/i);
-    const mpsMatch = text.match(/Minimum Passing Score \(MPS\)[:\s]*(\d+)/i);
-    return {
-      exam: examMatch ? examMatch[1].trim() : '',
-      result: resultMatch ? resultMatch[1].trim() : '',
-      score: scoreMatch ? scoreMatch[1].trim() : '',
-      mps: mpsMatch ? mpsMatch[1].trim() : '',
-    };
+  //   // Updated regex to match "Did Not Pass" instead of "Failed"
+  //   const resultMatch = text.match(/Result[:\s]*(Passed|Did Not Pass)/i);
+  //   const examMatch = text.match(/Exam[:\s]*([\w\s|]+CFA Exam)/i);
+  //   const scoreMatch = text.match(/Your Score[:\s]*(\d+)/i);
+  //   const mpsMatch = text.match(/Minimum Passing Score \(MPS\)[:\s]*(\d+)/i);
+  //   return {
+  //     exam: examMatch ? examMatch[1].trim() : '',
+  //     result: resultMatch ? resultMatch[1].trim() : '',
+  //     score: scoreMatch ? scoreMatch[1].trim() : '',
+  //     mps: mpsMatch ? mpsMatch[1].trim() : '',
+  //   };
+  // };
+  function extractCFAResults(text) {
+  // Extract pass/fail result
+ 
+  
+  // Extract exam details
+  const examMatch = text.match(/Exam:\s+([\d]{4}\s+[A-Za-z]+\s+Level\s+[I|II|III]+\s+CFA\s+Exam)/i);
+  const examDetails = examMatch ? examMatch[1] : null;
+
+  const match = examDetails.match(/Level\s+([I]{1,3}|\d)/i);
+
+  let level = null;
+
+if (match) {
+  const value = match[1].toUpperCase();
+  const romanToNumber = { I: 1, II: 2, III: 3 };
+
+  level = romanToNumber[value] || parseInt(value);
+}
+  
+  // Extract candidate's score
+  const scoreMatch = text.match(/Your Score:\s+(\d+)/i);
+  const score = scoreMatch ? parseInt(scoreMatch[1]) : null;
+  
+  // Extract minimum passing score
+  const mpsMatch = text.match(/Minimum Passing Score \(MPS\)[:\s]*(\d+)/i);
+  const minimumPassingScore = mpsMatch ? parseInt(mpsMatch[1]) : null;
+  
+  // Extract candidate name
+  const nameMatch = text.match(/Name:\s+([^\n]+)/i);
+  const name = nameMatch ? nameMatch[1].trim() : null;
+  
+  // Extract CFA ID
+  const idMatch = text.match(/CFA Institute ID:\s+(\d+)/i);
+  const cfaId = idMatch ? idMatch[1] : null;
+  
+  return {
+    name,
+    cfaId,
+    examDetails,
+    
+    score,
+    minimumPassingScore,
+   
+    level
   };
+}
 
   // OCR and parse summary from page 1 image
   const extractSummaryFromImage = async (imageUrl) => {
@@ -147,7 +222,8 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
       const { data: { text } } = await Tesseract.recognize(imageUrl, 'eng', {
         tessjs_create_pdf: '0',
       });
-      console.log('OCR PAGE 1 TEXT:', text);
+      // console.log('OCR PAGE 1 TEXT:', text);
+     
       return parseSummaryFromText(text);
     } catch (err) {
       return null;
@@ -183,22 +259,37 @@ const FileUpload = ({ onFileProcessed, isProcessing }) => {
       // Handle different file types
       if (file.type === 'application/pdf') {
         // For PDFs, extract both pages as images
-        const { page1Image, page2Image } = await processPdf(file);
-        
-        // OCR page 1 for summary info
-        const summaryInfo = await extractSummaryFromImage(page1Image);
-        setSummary(summaryInfo);
-        
-        // Debug log for page2Image
-        console.log('DEBUG: page2Image', page2Image);
-        
-        // Pass both images and summary to the next step (text extraction and score analysis)
-        await onFileProcessed({
+        if(examType==="CFA")
+        {
+            const { page1Image, page2Image ,summary} = await processPdfCFA(file);
+       
+          // OCR page 1 for summary info
+          // const summaryInfo = await extractSummaryFromImage(page1Image);
+          setSummary(summary);
+          // console.log(summary)
+          // Debug log for page2Image
+          // console.log('DEBUG: page2Image', page2Image);
+          await onFileProcessed({
           file,
           page1Image,
           page2Image,
-          summary: summaryInfo
+          summary ,
+
+          
         });
+      }
+      let processedContent
+      if(examType=="FRM")
+       {
+        // {  console.log("in FRM")
+          processedContent = await processPdfFRM(file);
+          // console.log(processedContent)
+          await onFileProcessed(processedContent);
+      }
+
+     
+        // Pass both images and summary to the next step (text extraction and score analysis)
+        
       } else if (file.type.startsWith('image/')) {
         // For images, validate dimensions
         const fileUrl = URL.createObjectURL(file);

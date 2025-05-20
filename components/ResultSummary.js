@@ -2,17 +2,18 @@ import React from 'react';
 
 const ResultSummary = ({ summary }) => {
   if (!summary) return null;
+  const result = summary.score > summary.minimumPassingScore ? "Passed": "Failed"
   
   const rows = [
-    { label: 'Exam', value: summary.exam || '-', emoji: '📝' },
+    { label: 'Exam', value: summary.examDetails || '-', emoji: '📝' },
     { 
       label: 'Result', 
-      value: summary.result || '-',
-      emoji: summary.result === 'Passed' ? '✅' : '🔄',
-      highlight: summary.result === 'Passed'
+      value: result || '-',
+      emoji: result === 'Passed' ? '✅' : '🔄',
+      highlight: result === 'Passed'
     },
     { label: 'Your Score', value: summary.score || '-', emoji: '📊' },
-    { label: 'Minimum Passing Score (MPS)', value: summary.mps || '-', emoji: '🎯' },
+    { label: 'Minimum Passing Score (MPS)', value: summary.minimumPassingScore || '-', emoji: '🎯' },
   ];
   
   return (

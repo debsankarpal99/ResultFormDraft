@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import FileUpload from '../components/FileUpload';
+
 import ResultSummary from '../components/ResultSummary';
 import ResultTable from '../components/ResultTable';
+import ResultTableFRM from '../components/ResultTableFRM';
 import ScoreChart from '../components/ScoreChart';
 import ResultMessage from '../components/ResultMessage';
 import { analyzeExamScore } from '../lib/imageProcessing';
+import { analyzeFRMResultText } from '../lib/frmTextProcessing';
+import { sum } from 'pdf-lib';
+
 
 export default function Home() {
   const [scores, setScores] = useState(null);
@@ -17,14 +22,20 @@ export default function Home() {
   const [fileType, setFileType] = useState(null);
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [CFALevel, setCFALevel] = useState(null);
+  const handleSetSummary=(summary)=>{
+    setSummary(summary);
+    // console.log("summary is " , summary)
+  }
 
   // the course list
   const courses = [
-    { label: 'CFA - Level 1', value: 'CFA - Level 1', enabled: true },
-    { label: 'CFA - Level 2 (Coming soon)', value: 'CFA - Level 2', enabled: false },
-    { label: 'CFA - Level 3 (Coming soon)', value: 'CFA - Level 3', enabled: false },
-    { label: 'FRM - Part 1 (Coming soon)', value: 'FRM - Part 1', enabled: false },
-    { label: 'FRM - Part 2 (Coming soon)', value: 'FRM - Part 2', enabled: false },
+    { label: 'CFA', value: 'CFA', enabled: true },
+    { label: 'FRM', value: 'FRM', enabled: true },
+    // { label: 'CFA - Level 2 (Coming soon)', value: 'CFA - Level 2', enabled: false },
+    // { label: 'CFA - Level 3 (Coming soon)', value: 'CFA - Level 3', enabled: false },
+    // { label: 'FRM - Part 1 (Coming soon)', value: 'FRM - Part 1', enabled: false },
+    // { label: 'FRM - Part 2 (Coming soon)', value: 'FRM - Part 2', enabled: false },
   ];
 
   // FileUpload output
@@ -39,16 +50,26 @@ export default function Home() {
       setAnalysisComplete(false);
 
       // Debug log for received data
-      console.log('DEBUG: handleFileProcessed received', data);
+      // console.log('DEBUG: handleFileProcessed received', data);
+
 
       // data: file, page1Image, page2Image
       setFileType(data.file.type);
       // If summary is available (from FileUpload), set it
-      if (data.summary) setSummary(data.summary);
+      const level = data.summary.level;
+      handleSetSummary(data.summary);
+      
+      
+      
+      
+      
+      
+    
+    
 
       let imageElement;
       if (data.file.type === 'application/pdf') {
-        console.log('DEBUG: About to analyze page2Image', data.page2Image);
+        // console.log('DEBUG: About to analyze page2Image', data.page2Image);
         // Use page2Image for score analysis
         imageElement = await new Promise((resolve, reject) => {
           const img = new Image();
@@ -71,11 +92,12 @@ export default function Home() {
       }
 
       // Analyzing the exam score with enhanced processing
-      const { scores: scoreResults, debugImageUrl } = await analyzeExamScore(imageElement);
-      console.log('DEBUG: Score analysis result', scoreResults);
+      const { scores: scoreResults, debugImageUrl } = await analyzeExamScore(imageElement , level);
+   
       setScores(scoreResults);
       setDebugImage(debugImageUrl);
       setAnalysisComplete(true);
+
     } catch (err) {
       console.error('Error processing file:', err);
       setError(err.message || 'Failed to process the file');
@@ -83,6 +105,22 @@ export default function Home() {
       setIsProcessing(false);
     }
   };
+   const handleFileProcessedFRM = async (text) => {
+    try {
+      setIsProcessing(true);
+      setError(null);
+      setScores(null);
+      const scoreResults = analyzeFRMResultText(text);
+      setScores(scoreResults);
+      setAnalysisComplete(true);
+    } catch (err) {
+      console.error('Error processing text:', err);
+      setError(err.message || 'Failed to process the file');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  
 
   const handleAnalyzeAgain = () => {
     setScores(null);
@@ -119,7 +157,7 @@ export default function Home() {
         <main className="main-card p-8 mb-8">
           {!analysisComplete && (
             <div className="course-selector-container mb-20">
-              <label className="block text-xl font-semibold text-gray-700 mb-4">
+              <label className="block  text-xl font-semibold text-gray-700 m-7 ">
                 Select Course
               </label>
               
@@ -143,12 +181,23 @@ export default function Home() {
                 </select>
               </div>
               
-              {selectedCourse === 'CFA - Level 1' && (
+              {selectedCourse === 'CFA' && (
                 <div className="mt-16 border-t border-gray-200 pt-8">
                   <FileUpload 
                     onFileProcessed={handleFileProcessed}
                     isProcessing={isProcessing}
+                    examType="CFA"
                   />
+                </div>
+              )}
+              {selectedCourse === 'FRM' && (
+                <div className="mt-16 border-t border-gray-200 pt-8">
+                  
+                <FileUpload
+              onFileProcessed={handleFileProcessedFRM}
+              isProcessing={isProcessing}
+              examType={"FRM"}
+              />
                 </div>
               )}
             </div>
@@ -168,8 +217,25 @@ export default function Home() {
               </div>
             </div>
           )}
+          {
+            analysisComplete && selectedCourse === "FRM" && scores && (
+              <>
+                            <ResultTableFRM scores={scores} />
+                            <div className = "mt-12 flex justify-center">
+                <button
+                  className="btn-primary"
+                  onClick={handleAnalyzeAgain}
+                >
+                  Analyze Another Result
+                </button>
+              </div>
+                </>
+            )
+            
 
-          {analysisComplete && (
+          }
+
+          {analysisComplete && selectedCourse==="CFA" && (
             <div className="analysis-results">
               {summary && <ResultSummary summary={summary} />}
               
